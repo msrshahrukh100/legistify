@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>
+Shahrukh
+</title>
+</head>
+<body>
+
+<form action="" method='POST'>
+	{% for lawyer in lawyers %}
+    <p>
+      <input name="group1" type="radio" id="{{ lawyer.id }}" value="{{ lawyer.id }}" />
+      <label for="test1">Name: {{ lawyer.name }} &nbsp Email Id: {{ lawyer.email }}  &nbsp {% if lawyer.startdate and lawyer.enddate %}available from {{ lawyer.startdate }}&nbsp to {{ lawyer.enddate }}&nbsp{% endif %}</label>
+    </p>
+    {% endfor %}
+    
+  </form>
+</body>
+</html>

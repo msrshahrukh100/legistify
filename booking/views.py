@@ -32,20 +32,11 @@ def signup(request):
 
 
 
-def dashboard(request):
+def userdashboard(request):
 	response = copy.deepcopy(RESPONSE_FORMAT)
-	form = Signupform(request.POST or None)
 	if request.method == 'POST':
-		if form.is_valid():
-			if len(form.cleaned_data.get('password')) < 5 or Users.checkemail(form.cleaned_data.get('email')):
-				if len(form.cleaned_data.get('password')) < 5:
-					response['errors'] = "Password length too short.Should be more than 5."
-				if Users.checkemail(form.cleaned_data.get('email')):
-					response['errors'] = "Email is already taken!"
-			else:
-				data = form.cleaned_data
-				Users.create_user(data=data)
-				response['message'] = "Successfully registered!"
-			return JsonResponse(response)
-	context = {'form':form}
-	return render(request,'signup.html',context)
+		pass
+	context = {
+	'lawyers' : Users.objects.all().filter(is_lawyer=True)
+	}
+	return render(request,'dashboard1.html',context)
