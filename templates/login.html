@@ -8,37 +8,18 @@ Shahrukh
         crossorigin="anonymous"></script>
 </head>
 <body>
-	<form method='POST'  action=''>{% csrf_token %}
+	<form method='POST' action='' >{% csrf_token %}
 {% for field in form %}
 <p>{{ field.label_tag }}
 {{ field }}
 {{ field.errors }}
 </p>
 {% endfor %}
-<input type='submit' value = 'Signup' id='btn-signup'>
+<input type='submit' value = 'Login' id='btn-login'>
 	</form>
 </body>
 
  <script type="text/javascript">
-
-$.fn.serializeObject = function()
-{
-   var o = {};
-   var a = this.serializeArray();
-   $.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
-};  
-
-
       function getCookies(){
         var l = document.cookie.split(';');
         var obj = {};
@@ -55,25 +36,23 @@ $.fn.serializeObject = function()
     <!-- iCheck -->
     <script>
       $(function () {
-              $('#btn-signup').click(function(){
+              $('#btn-login').click(function(){
                  var cookies = getCookies();
               
-                //  var arr = {
-                //   "name" : $('#id_name').val(),
-                //   "is_lawyer" : $('#id_is_lawyer').val(),
-                //   "password" : $('#id_password').val(), 
-                //   "email" : $('#id_email').val(),
-                //   "csrfmiddlewaretoken": cookies['csrftoken']
-                // };
+                 var arr = {
+                  "password" : $('#id_password').val(), 
+                  "email" : $('#id_email').val(),
+                  "csrfmiddlewaretoken": cookies['csrftoken']
+                };
                 var temp = {'X-CSRFToken': cookies['csrftoken']};
                 
               $.ajax({
-                url : '{% url "signup" %}',
+                url : '{% url "login" %}',
                 type : 'POST',
                 dataType: 'json',
                 headers: temp,
                 async: false,
-                data: JSON.stringify($('form').serializeObject()),
+                data: JSON.stringify(arr),
                 contentType: 'application/json; charset=utf-8',
 
                 success : function(data){

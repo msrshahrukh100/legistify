@@ -7,10 +7,8 @@ Shahrukh
   <script src="https://code.jquery.com/jquery-1.12.3.js"
 			  integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
 			  crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
-
+  
   <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
   
 </head>
 <body>
@@ -18,7 +16,7 @@ Shahrukh
 <form action="" method='POST' onsubmit="return false">{% csrf_token %}
 	{% for lawyer in lawyers %}
     <p>
-      <input name="group" type="radio" id="{{ lawyer.id }}" value="{{ lawyer.id }}" />
+      <input name="lawyer" type="radio" id="{{ lawyer.id }}" value="{{ lawyer.id }}" />
       <label for="{{ lawyer.id }}">Name: {{ lawyer.name }} &nbsp Email Id: {{ lawyer.email }}  &nbsp {% if lawyer.startdate and lawyer.enddate %}available from {{ lawyer.startdate }}&nbsp to {{ lawyer.enddate }}&nbsp{% endif %}</label>
     </p>
     {% endfor %}
@@ -37,7 +35,26 @@ Shahrukh
   </form>
 </body>
 
+
+
 <script type="text/javascript">
+
+$.fn.serializeObject = function()
+{
+   var o = {};
+   var a = this.serializeArray();
+   $.each(a, function() {
+       if (o[this.name]) {
+           if (!o[this.name].push) {
+               o[this.name] = [o[this.name]];
+           }
+           o[this.name].push(this.value || '');
+       } else {
+           o[this.name] = this.value || '';
+       }
+   });
+   return o;
+};  
 
 function getcookies(){
 
@@ -63,15 +80,15 @@ $('#submit').click(function(){
 // var data = $('form').data();
 var cookies = getcookies();
  var temp = {'X-CSRFToken': cookies['csrftoken']};
-var data = {
-};
+
 
 $.ajax({
 	url:'{% url "addrequest" %}',
 	type:'POST',
 	dataType: 'json',
 	async: false,
-	data: JSON.stringify(data),
+	data: JSON.stringify($('form').serializeObject()),
+  // data:$('form').serializeArray(),
   headers: temp,
     contentType: 'application/json; charset=utf-8',
 	success : function(data){

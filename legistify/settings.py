@@ -51,6 +51,9 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = 'django.contrib.auth.backends.ModelBackend'
+AUTH_USER_MODEL = 'booking.Users'
+
 ROOT_URLCONF = 'legistify.urls'
 
 TEMPLATES = [
@@ -69,8 +72,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'legistify.wsgi.application'
 
+WSGI_APPLICATION = 'legistify.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

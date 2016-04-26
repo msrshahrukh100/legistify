@@ -7,10 +7,9 @@ class Signupform(forms.ModelForm):
 		fields = ["name","email","is_lawyer","password"]
 
 
-class Loginform(forms.ModelForm):
-	class Meta:
-		model = Users
-		fields = ["email","password"]
+class Loginform(forms.Form):
+	email = forms.EmailField()
+	password = forms.CharField()
 
 
 
