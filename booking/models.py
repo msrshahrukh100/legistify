@@ -66,6 +66,7 @@ class Users(AbstractBaseUser):
 class Bookingrequests(models.Model):
 	description = models.TextField(max_length=100)
 	from_userid = models.IntegerField(null=False, blank=False)
+	from_email = models.EmailField(null=True)
 	to_userid = models.IntegerField(null=False, blank=False)
 	date = models.DateField(null=False, blank=False)
 	accepted = models.BooleanField(default=False)
@@ -77,7 +78,8 @@ class Bookingrequests(models.Model):
 		f = kwargs['user']
 		t = kwargs['data']['lawyer']
 		date = kwargs['data']['date']
-		appointment = cls(description=d,from_userid=f,to_userid=t,date=date)
+		e = kwargs['email']
+		appointment = cls(description=d,from_userid=f,to_userid=t,date=date,from_email=e)
 		appointment.save()
 		# appointment.description = kwargs['data'].get('description',"None")
 		# appointment.from_userid = kwargs['user']

@@ -11,6 +11,11 @@ class Loginform(forms.Form):
 	email = forms.EmailField()
 	password = forms.CharField()
 
+class Lawyerform(forms.ModelForm):
+	class Meta:
+		model = Users
+		fields = ['startdate','enddate']
+
 
 
 
