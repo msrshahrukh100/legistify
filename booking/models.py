@@ -48,7 +48,8 @@ class Users(AbstractBaseUser):
 		pw = kwargs.get('password')
 		uid = kwargs.get('email')
 		user = cls.objects.get(email=uid)
-		if check_password(kwargs['password'],user.password):
+		print user.password
+		if user.check_password(kwargs['password']):
 			return user
 		else:
 			return None
@@ -57,15 +58,6 @@ class Users(AbstractBaseUser):
 
 	@classmethod
 	def create_user(cls,data):
-		# instance = cls()
-		# pw = data['password']
-		# hashedpw = make_password(pw, salt=None, hasher='default')
-		# instance.name = data['name']
-		# instance.email = data['email']
-		# instance.is_lawyer = data['is_lawyer']
-		# instance.password = hashedpw
-		# instance.save()
-		# print instance.password
 		return cls.objects.create_user(name=data['name'], email=data['email'], is_lawyer=data['is_lawyer'], password=data['password'])
 
 	def __unicode__(self):
@@ -76,6 +68,26 @@ class Bookingrequests(models.Model):
 	from_userid = models.IntegerField(null=False, blank=False)
 	to_userid = models.IntegerField(null=False, blank=False)
 	date = models.DateField(null=False, blank=False)
+	accepted = models.BooleanField(default=False)
+
+
+	@classmethod
+	def addrequest(cls,**kwargs):
+		d = kwargs['data'].get('description',"None")
+		f = kwargs['user']
+		t = kwargs['data']['lawyer']
+		date = kwargs['data']['date']
+		appointment = cls(description=d,from_userid=f,to_userid=t,date=date)
+		appointment.save()
+		# appointment.description = kwargs['data'].get('description',"None")
+		# appointment.from_userid = kwargs['user']
+		# appointment.to_userid = kwargs['data']['lawyer']
+		# appointment.date = kwargs['data']['date']
+		# appointment.save()
+		# return appointment 
+
+
+
 
 	
 
