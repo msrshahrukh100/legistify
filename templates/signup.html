@@ -15,19 +15,20 @@ Legistify|Home
 
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
-          
+           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
 </head>
 <body>
 
-  {% block content %}
-<nav>
-    <div class="container">
-      <div class="nav-wrapper">
+<nav style="background-color:#4e342e">
+    <div class="container" >
+      <div class="nav-wrapper" style="color:green">
         <h4 class="brand-logo">Legistify</h4>
          <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% block link %}{% url 'login' %}{% endblock %}">{% block linkname %}Login{% endblock %}</a></li>
+        <li>{% block ll %}{% endblock %}</li>
+
       </ul>
 
         <ul class="right side-nav" id="nav-mobile">
@@ -39,7 +40,6 @@ Legistify|Home
   </nav>
 
 
-
 <style type="text/css">
 .errorlist li{
   color: red;
@@ -47,8 +47,13 @@ Legistify|Home
 .messages li{
   color: green;
 }
+.messages .error{
+  color:red;
+}
 
 </style>
+  {% block content %}
+
 
   <div class="parallax-container">
     <div class="parallax"><img src = "{% static 'images/pic.jpg' %}"></div>
@@ -76,10 +81,12 @@ Legistify|Home
 {% endif %}
 {{ field.label_tag }}
 <p style="color:red">{{ field.errors }}</p>          
-{% endfor %}
         </div>
+{% endfor %}
 </div>
-<input type='submit' value = 'Signup' id='btn-signup' class="waves-effect waves-light btn">
+<button class="btn waves-effect waves-light" type="submit" name="action">Sign Up
+    <i class="material-icons right">send</i>
+  </button>
   </form>
 </div>
 
@@ -98,8 +105,114 @@ Legistify|Home
 {% endblock %}
 
 
+
+
+<script type="text/javascript">
+
+
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15 ,// Creates a dropdown of 15 years to control year
+    format: 'yyyy-mm-dd', 
+  });
+       
+
+$.fn.serializeObject = function()
+{
+   var o = {};
+   var a = this.serializeArray();
+   $.each(a, function() {
+       if (o[this.name]) {
+           if (!o[this.name].push) {
+               o[this.name] = [o[this.name]];
+           }
+           o[this.name].push(this.value || '');
+       } else {
+           o[this.name] = this.value || '';
+       }
+   });
+   return o;
+};  
+
+function getcookies(){
+
+  var cookievalue = document.cookie.split(';');
+  var obj = {}
+  for (var i=0;i<cookievalue.length ; i++)
+  {
+    tt = cookievalue[i];
+    if (tt != undefined)
+    {
+      var temp = tt.split('=');
+      obj[temp[0].trim()]=temp[1].trim();
+    }
+  }
+  return obj;
+
+}
+
+$(function(){
+
+
+$('#submit').click(function(){
+// var data = $('form').data();
+var cookies = getcookies();
+ var temp = {'X-CSRFToken': cookies['csrftoken']};
+
+
+$.ajax({
+  url:'{% url "userdashboard" %}',
+  type:'POST',
+  dataType: 'json',
+  async: false,
+  data: JSON.stringify($('form').serializeObject()),
+  // data:$('form').serializeArray(),
+  headers: temp,
+    contentType: 'application/json; charset=utf-8',
+  success : function(data){
+    $('#bookerror').empty();
+    if (data['msg'])
+    {
+        $('#bookerror').append(data['msg']);
+    }
+  }
+
+
+});
+});
+
+
+
+
+});
+
+
+</script>
+
+
+{% block script %}
+
+{% endblock %}
+
+
 </body>
 
+
+ <footer class="page-footer" style="background-color:#4e342e">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Legistify</h5>
+              </div>
+              
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2014 Copyright Text
+            </div>
+          </div>
+        </footer>
 
 
 

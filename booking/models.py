@@ -47,8 +47,10 @@ class Users(AbstractBaseUser):
 	def check_user(cls,**kwargs):
 		pw = kwargs.get('password')
 		uid = kwargs.get('email')
-		user = cls.objects.get(email=uid)
-		print user.password
+		try:
+			user = cls.objects.get(email=uid)
+		except:
+			return None
 		if user.check_password(kwargs['password']):
 			return user
 		else:

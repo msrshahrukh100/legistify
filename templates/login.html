@@ -4,27 +4,51 @@
 Legistify|Login
 {% endblock %}
 
+{% block link %}
+{% url "signup" %}
+{% endblock %}
+{% block linkname %}
+Sign Up
+{% endblock %}
+
+
+{% load cfilters %}
 
 {% block content %}
 
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><h5>{{ message }}</h5></li>
     {% endfor %}
 </ul>
 {% endif %}
 
 
+<div class="row">
+	<form method='POST' action='' style="padding-top:30px;"class="col s6 offset-s3" >{% csrf_token %}
 
-	<form method='POST' action='' >{% csrf_token %}
 {% for field in form %}
-<p>{{ field.label_tag }}
+       <div class="input-field col s12">    
+{% if field.name == "password" %}
+{{ field|addtype:"password" }}
+{% else %}
 {{ field }}
-{{ field.errors }}
-</p>
+{% endif %}
+{{ field.label_tag }}
+<p style="color:red">{{ field.errors }}</p>          
+        </div>  
+
 {% endfor %}
-<input type='submit' value = 'Login' id='btn-login'>
+
+<!-- <input class="waves-effect waves-light btn" type='submit' value = 'Login' id='btn-login' > -->
+<button class="btn waves-effect waves-light" type="submit" name="action">Login
+    <i class="material-icons right">send</i>
+  </button>
+
+</div>
+
+
 	</form>
 
 

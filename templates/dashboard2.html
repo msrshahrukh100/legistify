@@ -1,24 +1,45 @@
-<html>
-<head>
-<title>
-{% block title %}
-Legistify | Homepage
-{% endblock %}
-</title>
-  <script src="https://code.jquery.com/jquery-1.12.3.js"
-			  integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
-			  crossorigin="anonymous"></script>
-</head>
-<body>
-<p>Available from {{ user.startdate }} to {{ user.enddate }}</p>
-<a href='{% url "logout" %}'>Logout</a>
-Timing form
-<form action='' method='post'>{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Update">
-</form>
-Timing form
+{% extends "signup.html" %}
 
+{% block title %}
+Legistify|Lawyers
+{% endblock %}
+
+{% block link %}
+{% url "logout" %}
+{% endblock %}
+{% block linkname %}
+Logout
+{% endblock %}
+
+
+{% load cfilters %}
+
+{% block ll %}
+Last login {{ user.last_login|timesince }} ago  
+{% endblock %}
+
+  
+{% block content %}  
+
+<h3 class="center-align">Welcome {{ user.name }}</h3>
+
+<h5 class="center-align">Your availability date is set from {{ user.startdate }} to {{ user.enddate }}</h5>
+
+<div class="row">
+<form action='' class="col s10 offset-s1" method='post'>{% csrf_token %}
+	<p>You can change your availability time here</p>
+ {% for field in form %}
+        <div class="input-field col s4">    
+	{{ field|addclass:"datepicker" }}
+	{{ field.label_tag }}
+<p style="color:red">{{ field.errors }}</p>          
+        </div>
+{% endfor %}
+<button class="btn waves-effect waves-light" type="submit" name="action">Update
+    <i class="material-icons right">send</i>
+  </button>
+</form>
+</div>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -27,33 +48,60 @@ Timing form
 </ul>
 {% endif %}
 
-{% for r in bookingrequests %}
-<p>
-{{ r.from_email }} &nbsp {{ r.description }} &nbsp{{ r.date }} &nbsp {{ r.accepted }} &nbsp <button class="btn waves-effect waves-light" type="submit" name="action" class="request" id="{{ r.id }}" >Accept request
+
+<div class="row">
+	<div class="col s10 offset-s1">
+<ul class="collection">
+
+	{% for r in bookingrequests %}
+	{% if r.accepted %} 
+	Previous Request
+    <li class="collection-item avatar">
+      <i class="material-icons circle green">insert_chart</i>
+      <span class="title">Request from {{ r.from_email }}</span>
+      <p>Description: {{ r.description }} <br>
+         Date of appointment: {{ r.date }}
+      </p>
+
+    </li>
+    {% else %}
+    Pending request
+    <li class="collection-item avatar">
+      <i class="material-icons circle red">play_arrow</i>
+      <span class="title">Request from {{ r.from_email }}</span>
+      <p>Description: {{ r.description }} <br>
+         Date of appointment: {{ r.date }}
+      </p>
+      
+  <button class="btn waves-effect waves-light" type="submit" name="action" class="request" id="{{ r.id }}">Accept request
+    <i class="material-icons right">send</i>
   </button>
-</p>
-{% endfor %}
+        
+    </li>
+    {% endif %}
+    {% endfor %}
+   
+  </ul>
+  <h4 id="acceptrequest"></h4>
+  </div>
+</div>
+
+{% endblock %}
 
 
-</body>
-
-
+{% block script %}
 <script type="text/javascript">
 $(function(){
 $('button').click(function(){
 console.log(this.id);
 var rid = this.id;
 $.ajax({
-	url : 'acceptrequest/'+rid,
-	type : 'GET',
-	success : function(data){
-		console.log(data);
-	}
-
-
-
-
-
+  url : 'acceptrequest/'+rid,
+  type : 'GET',
+  success : function(data){
+    console.log(data);
+    $('#acceptrequest').append(data['msg']);
+  }
 
 });
 
@@ -61,6 +109,5 @@ $.ajax({
 
 });
 </script>
-
-</html>
+{% endblock %}
 

@@ -1,20 +1,31 @@
-<html>
-<head>
-<title>
-Shahrukh
-</title>
-  <!-- Compiled and minified CSS -->
-  <script src="https://code.jquery.com/jquery-1.12.3.js"
-			  integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
-			  crossorigin="anonymous"></script>
-  
-  <!-- Compiled and minified JavaScript -->
-  
-</head>
-<body>
-<a href='{% url "logout" %}'>Logout</a>
+{% extends "signup.html" %}
 
-<form action="" method='POST' onsubmit="return false">{% csrf_token %}
+{% block title %}
+Legistify|Users
+{% endblock %}
+
+{% block link %}
+{% url "logout" %}
+{% endblock %}
+{% block linkname %}
+Logout
+{% endblock %}
+
+
+{% load cfilters %}
+
+{% block ll %}
+Last login {{ user.last_login|timesince }} ago  
+{% endblock %}
+
+  
+{% block content %}  
+
+<h3 class="center-align">Welcome {{ user.name }}  </h3>
+<h6 class="center-align">Select a lawyer from below for requesting an appointment</h6>
+
+<div class="row">
+<form action="" method='POST' onsubmit="return false" class="col s10 offset-s2">{% csrf_token %}
 	{% for lawyer in lawyers %}
     <p>
       <input name="lawyer" type="radio" id="{{ lawyer.id }}" value="{{ lawyer.id }}" />
@@ -29,87 +40,20 @@ Shahrukh
           <label for="icon_prefix2">Description</label>
         </div>
       </div>
- <input type="date" class="datepicker" name = "date">
-
-<input type="submit" value="Send request" id="submit">
+      <div class="input-field col s6">
+ <input type="date" id="appdate" class="datepicker" name = "date">
+ <label for="appdate">Select a date for appointment</label>
+<button class="btn waves-effect waves-light" type="submit" id="submit" name="action">Send Request
+    <i class="material-icons right">send</i>
+  </button>
+</div>
 
   </form>
+</div>
   <h3 id="bookerror"></h3>
-</body>
-
-
-
-<script type="text/javascript">
-
-$.fn.serializeObject = function()
-{
-   var o = {};
-   var a = this.serializeArray();
-   $.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
-};  
-
-function getcookies(){
-
-  var cookievalue = document.cookie.split(';');
-  var obj = {}
-  for (var i=0;i<cookievalue.length ; i++)
-  {
-    tt = cookievalue[i];
-    if (tt != undefined)
-    {
-      var temp = tt.split('=');
-      obj[temp[0].trim()]=temp[1].trim();
-    }
-  }
-  return obj;
-
-}
-
-$(function(){
-
-
-$('#submit').click(function(){
-// var data = $('form').data();
-var cookies = getcookies();
- var temp = {'X-CSRFToken': cookies['csrftoken']};
-
-
-$.ajax({
-	url:'{% url "userdashboard" %}',
-	type:'POST',
-	dataType: 'json',
-	async: false,
-	data: JSON.stringify($('form').serializeObject()),
-  // data:$('form').serializeArray(),
-  headers: temp,
-    contentType: 'application/json; charset=utf-8',
-	success : function(data){
-    if (data['msg'])
-    {
-        $('#bookerror').append(data['msg']);
-    }
-	}
-
-
-});
-});
 
 
 
 
-});
+{% endblock %}
 
-
-</script>
-
-</html>

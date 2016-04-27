@@ -94,9 +94,11 @@ def lawyerdashboard(request):
 @login_required(login_url='login')
 def userdashboard(request):
 	response = copy.deepcopy(RESPONSE_FORMAT)
+	user = request.user
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		user = request.user
+		if not data.get('lawyer',None):
+			return JsonResponse({'msg':'Select a lawyer'})
 		lawyer = Users.objects.get(id=data['lawyer'])
 		data['date'] = convert_to_date_object(str(data['date']))
 		if 	lawyer.startdate and lawyer.enddate:
@@ -105,7 +107,8 @@ def userdashboard(request):
 		instance = Bookingrequests.addrequest(**dict(data=data,user=user.id,email=user.email))
 		return JsonResponse({'msg':'Request is sent to the selected lawyer'})
 	context = {
-	'lawyers' : Users.objects.all().filter(is_lawyer=True)
+	'lawyers' : Users.objects.all().filter(is_lawyer=True),
+	'user' : user,
 	}
 	return render(request,'dashboard1.html',context)
 
@@ -113,14 +116,17 @@ def userdashboard(request):
 
 @login_required()
 def acceptrequest(request,id=None):
-	print id
-	instance = Bookingrequests.objects.get(id=id)
-	instance.accepted = True
-	instance.save()
-	mail = instance.from_email
-	message = "Your request for a lawyer on Legistify.com has been accepted.Please contact the lawyer."
-	send_mail('Lawyer Request Confirmation Email', message, 'msr.concordfly@gmail.com',[mail], fail_silently=False)
-	return JsonResponse({"msg":"Mail has been sent to the client"})
+	try:
+		instance = Bookingrequests.objects.get(id=id)
+		mail = instance.from_email
+		message = "Your request for a lawyer on Legistify.com has been accepted.Please contact the lawyer."
+		send_mail('Lawyer Request Confirmation Email', message, 'msr.concordfly@gmail.com',[mail], fail_silently=False)
+		instance.accepted = True
+		instance.save()
+		return JsonResponse({"msg":"Mail has been sent to the client"})
+	except :
+		return JsonResponse({"msg":"Mail could not be sent because of network error"})
+	
 
 	
 
