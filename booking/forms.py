@@ -2,9 +2,10 @@ from .models import *
 from django import forms
 
 class Signupform(forms.ModelForm):
+	password = forms.CharField(min_length=5)
 	class Meta:
 		model = Users
-		fields = ["name","email","is_lawyer","password"]
+		fields = ["name","email","is_lawyer"]
 
 
 class Loginform(forms.Form):

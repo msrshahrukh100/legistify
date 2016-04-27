@@ -12,6 +12,7 @@ Shahrukh
   
 </head>
 <body>
+<a href='{% url "logout" %}'>Logout</a>
 
 <form action="" method='POST' onsubmit="return false">{% csrf_token %}
 	{% for lawyer in lawyers %}
@@ -33,6 +34,7 @@ Shahrukh
 <input type="submit" value="Send request" id="submit">
 
   </form>
+  <h3 id="bookerror"></h3>
 </body>
 
 
@@ -92,7 +94,10 @@ $.ajax({
   headers: temp,
     contentType: 'application/json; charset=utf-8',
 	success : function(data){
-		console.log(data);
+    if (data['msg'])
+    {
+        $('#bookerror').append(data['msg']);
+    }
 	}
 
 

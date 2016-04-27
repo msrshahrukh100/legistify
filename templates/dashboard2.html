@@ -1,7 +1,9 @@
 <html>
 <head>
 <title>
-
+{% block title %}
+Legistify | Homepage
+{% endblock %}
 </title>
   <script src="https://code.jquery.com/jquery-1.12.3.js"
 			  integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
@@ -9,13 +11,21 @@
 </head>
 <body>
 <p>Available from {{ user.startdate }} to {{ user.enddate }}</p>
-
+<a href='{% url "logout" %}'>Logout</a>
 Timing form
 <form action='' method='post'>{% csrf_token %}
 {{ form.as_p }}
 <input type="submit" value="Update">
 </form>
 Timing form
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% for r in bookingrequests %}
 <p>

@@ -1,14 +1,22 @@
 <html>
 <head>
 <title>
-Shahrukh
+{% block title %}
+Legistify|Home
+{% endblock %}
 </title>
-  <script src="https://code.jquery.com/jquery-1.12.3.js"
-        integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
-        crossorigin="anonymous"></script>
+  
 </head>
 <body>
-	<form method='POST'  action=''>{% csrf_token %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+	<form method='POST'  action='' >{% csrf_token %}
 {% for field in form %}
 <p>{{ field.label_tag }}
 {{ field }}
@@ -19,78 +27,6 @@ Shahrukh
 	</form>
 </body>
 
- <script type="text/javascript">
-
-$.fn.serializeObject = function()
-{
-   var o = {};
-   var a = this.serializeArray();
-   $.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
-};  
-
-
-      function getCookies(){
-        var l = document.cookie.split(';');
-        var obj = {};
-        for(var i = 0; l.length -1 > i; i++){
-          var tt = l[i];
-          if (tt != undefined){
-              var temp = l[i].split("=");
-              obj[temp[0].trim()] = temp[1].trim();
-          }
-        }
-        return obj;
-      }
-     </script>
-    <!-- iCheck -->
-    <script>
-      $(function () {
-              $('#btn-signup').click(function(){
-                 var cookies = getCookies();
-              
-                //  var arr = {
-                //   "name" : $('#id_name').val(),
-                //   "is_lawyer" : $('#id_is_lawyer').val(),
-                //   "password" : $('#id_password').val(), 
-                //   "email" : $('#id_email').val(),
-                //   "csrfmiddlewaretoken": cookies['csrftoken']
-                // };
-                var temp = {'X-CSRFToken': cookies['csrftoken']};
-                
-              $.ajax({
-                url : '{% url "signup" %}',
-                type : 'POST',
-                dataType: 'json',
-                headers: temp,
-                async: false,
-                data: JSON.stringify($('form').serializeObject()),
-                contentType: 'application/json; charset=utf-8',
-
-                success : function(data){
-
-                 
-                console.log(data);
- 
-                }
-
-              });
-
-              });
-
-              
-
-              });
-    </script>
 
 
 
