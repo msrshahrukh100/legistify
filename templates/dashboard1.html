@@ -25,7 +25,7 @@ Last login {{ user.last_login|timesince }} ago
 <h6 class="center-align">Select a lawyer from below for requesting an appointment</h6>
 
 <div class="row">
-<form action="" method='POST' onsubmit="return false" style="padding-bottom:150px" class="col s10 offset-s2">{% csrf_token %}
+<form action="" method='POST' onsubmit="return false" style="padding-bottom:90px" class="col s10 offset-s2">{% csrf_token %}
 	{% for lawyer in lawyers %}
     <p>
       <input name="lawyer" type="radio" id="{{ lawyer.id }}" value="{{ lawyer.id }}" />
