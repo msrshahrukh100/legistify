@@ -107,6 +107,7 @@ def userdashboard(request):
 		instance = Bookingrequests.addrequest(**dict(data=data,user=user.id,email=user.email))
 		return JsonResponse({'msg':'Request is sent to the selected lawyer'})
 	context = {
+	'bookingrequests' : Bookingrequests.objects.all().filter(from_userid=user.id),
 	'lawyers' : Users.objects.all().filter(is_lawyer=True),
 	'user' : user,
 	}
@@ -116,17 +117,22 @@ def userdashboard(request):
 
 @login_required()
 def acceptrequest(request,id=None):
-	try:
-		instance = Bookingrequests.objects.get(id=id)
-		mail = instance.from_email
-		message = "Your request for a lawyer on Legistify.com has been accepted.Please contact the lawyer."
-		send_mail('Lawyer Request Confirmation Email', message, 'msr.concordfly@gmail.com',[mail], fail_silently=False)
-		instance.accepted = True
-		instance.save()
-		return JsonResponse({"msg":"Mail has been sent to the client"})
-	except :
-		return JsonResponse({"msg":"Mail could not be sent because of network error"})
+	instance = Bookingrequests.objects.get(id=id)
+	mail = instance.from_email
+	message = "Your request for a lawyer on Legistify.com has been accepted.Please contact the lawyer."
+	instance.accepted = True
+	instance.save()
+	send_mail('Lawyer Request Confirmation Email', message, 'msr.concordfly@gmail.com',[mail], fail_silently=False)
+	return JsonResponse({"msg":"Mail has been sent to the client"})
 	
+@login_required()
+def denyrequest(request,id=None):
+	instance = Bookingrequests.objects.get(id=id)
+	instance.denied = True
+	instance.save()
+	return JsonResponse({"msg":"The request is denied"})
+	
+
 
 	
 

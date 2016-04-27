@@ -72,6 +72,7 @@ class Bookingrequests(models.Model):
 	to_userid = models.IntegerField(null=False, blank=False)
 	date = models.DateField(null=False, blank=False)
 	accepted = models.BooleanField(default=False)
+	denied = models.BooleanField(default=False)
 
 
 	@classmethod

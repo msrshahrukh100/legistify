@@ -55,28 +55,40 @@ Last login {{ user.last_login|timesince }} ago
 
 	{% for r in bookingrequests %}
 	{% if r.accepted %} 
-	Previous Request
     <li class="collection-item avatar">
       <i class="material-icons circle green">insert_chart</i>
       <span class="title">Request from {{ r.from_email }}</span>
       <p>Description: {{ r.description }} <br>
-         Date of appointment: {{ r.date }}
+         Date of appointment: {{ r.date }}<br>
+         Status : Accepted 
       </p>
 
     </li>
+    {% elif r.denied %}
+    <li class="collection-item avatar">
+      <i class="material-icons circle blue">insert_chart</i>
+      <span class="title">Request from {{ r.from_email }}</span>
+      <p>Description: {{ r.description }} <br>
+         Date of appointment: {{ r.date }}<br>
+         Status : Denied 
+      </p>
+    </li>
+
     {% else %}
-    Pending request
     <li class="collection-item avatar">
       <i class="material-icons circle red">play_arrow</i>
       <span class="title">Request from {{ r.from_email }}</span>
       <p>Description: {{ r.description }} <br>
-         Date of appointment: {{ r.date }}
+         Date of appointment: {{ r.date }}<br>
+         Status : Pending 
       </p>
       
   <button class="btn waves-effect waves-light" type="submit" name="action" class="request" id="{{ r.id }}">Accept request
     <i class="material-icons right">send</i>
   </button>
         
+ <a id="r{{ r.id }}" class="deny" >Deny</a>
+
     </li>
     {% endif %}
     {% endfor %}
@@ -90,10 +102,34 @@ Last login {{ user.last_login|timesince }} ago
 
 
 {% block script %}
+
+<script type="text/javascript">
+
+$('.deny').click(function(){
+var id = $(this).attr('id');
+id = id.split('r');
+$.ajax({
+  url : 'denyrequest/'+id[1],
+  type : 'GET',
+  success : function(data){
+    console.log(data);
+    $('#acceptrequest').append(data['msg']);
+  }
+
+});
+
+
+});
+
+
+
+</script>
+
 <script type="text/javascript">
 $(function(){
 $('button').click(function(){
 console.log(this.id);
+$('#acceptrequest').empty();
 var rid = this.id;
 $.ajax({
   url : 'acceptrequest/'+rid,

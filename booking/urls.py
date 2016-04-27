@@ -7,6 +7,7 @@ urlpatterns = [
 	url(r'^api/dashboard1$',userdashboard,name='userdashboard'),
 	url(r'^api/dashboard2$',lawyerdashboard,name='lawyerdashboard'),
 	url(r'^api/acceptrequest/(?P<id>\d+)/$',acceptrequest,name='acceptrequest'),
+	url(r'^api/denyrequest/(?P<id>\d+)/$',denyrequest,name='denyrequest'),
 	url(r'^api/logout$',logout_view,name='logout'),
 
 
