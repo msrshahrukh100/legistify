@@ -47,7 +47,7 @@ def userlogin(request):
 	form = Loginform(request.POST or None)
 	if request.method == 'GET':
 		context = {'form':form}
-		return render(request,'signup.html',context)
+		return render(request,'login.html',context)
 	elif request.method == 'POST':
 		if form.is_valid():
 			user = Users.check_user(**dict(form.cleaned_data))
@@ -62,8 +62,8 @@ def userlogin(request):
 				messages.error(request,"Invalid login credentials")
 				return redirect('login')
 		else :
-			return HttpResponse("shahrukh")
-
+			messages.error(request,"Invalid login credentials")
+			return redirect('login')
 
 
 @login_required(login_url='login')

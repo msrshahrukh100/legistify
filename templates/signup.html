@@ -1,30 +1,103 @@
 <html>
 <head>
 <title>
+{% load staticfiles %}
+{% load cfilters %}
 {% block title %}
 Legistify|Home
 {% endblock %}
 </title>
-  
+    <script src="https://code.jquery.com/jquery-1.12.3.js"
+        integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
+        crossorigin="anonymous"></script>
+ <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+          
+
+
 </head>
 <body>
-{% if messages %}
+
+  {% block content %}
+<nav>
+    <div class="container">
+      <div class="nav-wrapper">
+        <h4 class="brand-logo">Legistify</h4>
+         <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="{% url 'login' %}">Login</a></li>
+      </ul>
+
+        <ul class="right side-nav" id="nav-mobile">
+          <li class="hide-on-small-only"><a href="parallax.html"><i class="mdi-navigation-arrow-back"></i></a></li>
+        </ul>
+        <a class="button-collapse" href="#" data-activates='nav-mobile'><i class="mdi-navigation-menu"></i></a>
+      </div>
+    </div>
+  </nav>
+
+
+
+<style type="text/css">
+.errorlist li{
+  color: red;
+}
+.messages li{
+  color: green;
+}
+
+</style>
+
+  <div class="parallax-container">
+    <div class="parallax"><img src = "{% static 'images/pic.jpg' %}"></div>
+  </div>
+  <div class="section white">
+    <div class="row container">
+      <h2 class="header">Legistify</h2>
+      <p class="grey-text text-darken-3 lighten-3">Your Legal Advisor. Signup or login to get started</p>
+      {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
-
-	<form method='POST'  action='' >{% csrf_token %}
-{% for field in form %}
-<p>{{ field.label_tag }}
+<div class="row">
+  <form method='POST' class="col s6"  action='' >{% csrf_token %}
+<div class="row">
+  {% for field in form %}
+        <div class="input-field col s12">    
+{% if field.name == "password" %}
+{{ field|addtype:"password" }}
+{% else %}
 {{ field }}
-{{ field.errors }}
-</p>
+{% endif %}
+{{ field.label_tag }}
+<p style="color:red">{{ field.errors }}</p>          
 {% endfor %}
-<input type='submit' value = 'Signup' id='btn-signup'>
-	</form>
+        </div>
+</div>
+<input type='submit' value = 'Signup' id='btn-signup' class="waves-effect waves-light btn">
+  </form>
+</div>
+
+    </div>
+  </div>
+
+
+
+
+<script type="text/javascript">
+ $(document).ready(function(){
+      $('.parallax').parallax();
+    });
+        
+</script>
+{% endblock %}
+
+
 </body>
 
 
