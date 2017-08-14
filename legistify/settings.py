@@ -59,7 +59,7 @@ ROOT_URLCONF = 'legistify.urls'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = "587"
 EMAIL_HOST_USER = "towardslight52@gmail.com"
-EMAIL_HOST_PASSWORD = "ayzgagmiuadtelol"
+EMAIL_HOST_PASSWORD = "XXXXXXXXXXXXXXXX"
 EMAIL_USE_TLS = True
 
 TEMPLATES = [
